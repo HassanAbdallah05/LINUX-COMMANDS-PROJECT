@@ -1,5 +1,5 @@
 #include "cmd_cd.h"
-#include "directory_checker"
+#include "directory_checker.h"
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
