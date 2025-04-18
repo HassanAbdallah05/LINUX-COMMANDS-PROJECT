@@ -14,7 +14,7 @@ bool is_path_inside_home(const char *home, const char *requested_path)
     if (!realpath(home, home_real))
         return false;
 
-    // Copy requested path because dirname() may modify it
+    // Copy requested path because dirname() can modify it
     strncpy(path_copy, requested_path, sizeof(path_copy));
     path_copy[sizeof(path_copy) - 1] = '\0';
 
@@ -22,7 +22,7 @@ bool is_path_inside_home(const char *home, const char *requested_path)
     char *dir = dirname(path_copy);
 
     if (!realpath(dir, dir_part))
-        return false; // If the parent folder doesn't exist, deny
+        return false; // If the parent folder doesn't exist =reject it 
 
     size_t len = strlen(home_real);
     return strncmp(home_real, dir_part, len) == 0 &&
