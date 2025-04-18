@@ -10,8 +10,7 @@ int handle_ls(int sock, const char *home, const char *cwd,
               const char *arg_line)
 {
     char target[PATH_MAX];
-    /* If user wrote `ls DIR`, use it; else list current directory */
-   
+  
     // checks if the arg_line is not empty append it to cwd to build the target path.
     // else if arg_line is empty/null use (cwd). 
     if (arg_line && *arg_line)
@@ -21,7 +20,7 @@ int handle_ls(int sock, const char *home, const char *cwd,
 
 
 
-    // ensure the target_path within the user's home dir. 
+    // ensure the target_path within the user home dir. 
     if (!path_is_inside_home(home, target))
         return send(sock, "Reject access\n", 14, 0);
 
