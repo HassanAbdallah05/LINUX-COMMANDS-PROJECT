@@ -3,31 +3,34 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <libgen.h>
 
 bool is_path_inside_home(const char *home, const char *requested_path)
 {
     char home_real[PATH_MAX];
-    char path_copy[PATH_MAX];
     char dir_part[PATH_MAX];
+    char real_dir_path[PATH_MAX]; 
 
     if (!realpath(home, home_real))
         return false;
 
-    strncpy(path_copy, requested_path, sizeof(path_copy));
-    path_copy[sizeof(path_copy) - 1] = '\0';
+    // Extract the dir part of requested path [manually]. 
+    const char *last_slash = strrchr(requested_path, '/');
+    if (!last_slash) {
+        // If there is no slash this means current directory.
+        strcpy(dir_part, ".");
+    } else {
+        size_t len = last_slash - requested_path;
+        if (len >= sizeof(dir_part))
+            len = sizeof(dir_part) - 1;
+        strncpy(dir_part, requested_path, len);
+        dir_part[len] = '\0';
+    }
 
-    // Get directory part of the path
-    char *dir = dirname(path_copy);
-
-    if(!dir)
-        return false ; 
-
-    if (!realpath(dir, dir_part))
-        return false; // If the parent folder doesn't exist =reject it 
+    // the real path of the directory
+    if (!realpath(dir_part, real_dir_path))
+        return false;
 
     size_t len = strlen(home_real);
-    return strncmp(home_real, dir_part, len) == 0 &&
-           (dir_part[len] == '\0' || dir_part[len] == '/');
+    return strncmp(home_real, real_dir_path, len) == 0 &&
+           (real_dir_path[len] == '\0' || real_dir_path[len] == '/');
 }
-
