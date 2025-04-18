@@ -9,7 +9,7 @@ int handle_rm(int sock, const char *home, const char *cwd,
               const char *arg_line)
 {
     if (!arg_line || !*arg_line)
-        return send(sock, "rm missing arugemnt\n", 20, 0);
+        return send(sock, "rm missing arguemnt\n", 20, 0);
 
     char path[PATH_MAX];
     snprintf(path, sizeof(path), "%s/%s", cwd, arg_line);
